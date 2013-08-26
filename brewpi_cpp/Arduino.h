@@ -51,7 +51,9 @@ inline uint32_t millis() {
 }
 */
 
-inline uint32_t millis() { return 0; } // todo -implement
+#include "timems.h"
+
+inline uint32_t millis() { return (uint32_t)millisSinceStartup(); } 
 
 #define PROGMEM         // makes no sense in a unified memory architecture
 #define PSTR(x) x

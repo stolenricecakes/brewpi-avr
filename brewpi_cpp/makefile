@@ -91,7 +91,8 @@ $(AVRSRC)Simulator.cpp \
 $(AVRSRC)TempControl.cpp \
 $(AVRSRC)TemperatureFormats.cpp \
 $(AVRSRC)TempSensor.cpp \
-$(AVRSRC)Ticks.cpp
+$(AVRSRC)Ticks.cpp \
+$(SRC)timems.cpp
 
 
 PREPROCESSING_SRCS += 
@@ -122,7 +123,8 @@ $(OBJ_DIR)Simulator.o \
 $(OBJ_DIR)TempControl.o \
 $(OBJ_DIR)TemperatureFormats.o \
 $(OBJ_DIR)TempSensor.o \
-$(OBJ_DIR)Ticks.o
+$(OBJ_DIR)Ticks.o \
+$(OBJ_DIR)timems.o
 
 OBJS_AS_ARGS +=  \
 $(OBJ_DIR)Actuator.o \
@@ -146,7 +148,24 @@ $(OBJ_DIR)Simulator.o \
 $(OBJ_DIR)TempControl.o \
 $(OBJ_DIR)TemperatureFormats.o \
 $(OBJ_DIR)TempSensor.o \
-$(OBJ_DIR)Ticks.o
+$(OBJ_DIR)Ticks.o \
+$(OBJ_DIR)timems.o
+
+OBJS_AS_ARGS2 +=  \
+$(OBJ_DIR)BrewpiStrings.o \
+$(OBJ_DIR)FilterCascaded.o \
+$(OBJ_DIR)FilterFixed.o \
+$(OBJ_DIR)Logger.o \
+$(OBJ_DIR)Main.o \
+$(OBJ_DIR)PiLink.o \
+$(OBJ_DIR)Print.o \
+$(OBJ_DIR)TempControl.o \
+$(OBJ_DIR)TemperatureFormats.o \
+$(OBJ_DIR)TempSensor.o \
+$(OBJ_DIR)Ticks.o \
+$(OBJ_DIR)timems.o 
+
+
 
 C_DEPS +=  \
 $(OBJ_DIR)Actuator.d \
@@ -170,7 +189,8 @@ $(OBJ_DIR)Simulator.d \
 $(OBJ_DIR)TempControl.d \
 $(OBJ_DIR)TemperatureFormats.d \
 $(OBJ_DIR)TempSensor.d \
-$(OBJ_DIR)Ticks.d
+$(OBJ_DIR)Ticks.d \
+$(OBJ_DIR)timems.d \
 
 C_DEPS_AS_ARGS +=  \
 $(OBJ_DIR)Actuator.d \
@@ -194,11 +214,12 @@ $(OBJ_DIR)Simulator.d \
 $(OBJ_DIR)TempControl.d \
 $(OBJ_DIR)TemperatureFormats.d \
 $(OBJ_DIR)TempSensor.d \
-$(OBJ_DIR)Ticks.d
+$(OBJ_DIR)Ticks.d \
+$(OBJ_DIR)timems.d
 
-OUTPUT_FILE_PATH +=$(OUTPUT_DIR)$(TARGET_NAME).elf
+OUTPUT_FILE_PATH +=$(OUTPUT_DIR)$(TARGET_NAME).exe
 
-OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_DIR)$(TARGET_NAME).elf
+OUTPUT_FILE_PATH_AS_ARGS +=$(OUTPUT_DIR)$(TARGET_NAME).exe
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -219,6 +240,9 @@ define cppCompile
 	"$(AVRGCC)" $(DEFINES) -I"." -funsigned-char -funsigned-bitfields -Os -fno-split-wide-types -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g3 -Wall  -c -fno-exceptions -ffreestanding -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$(OBJ_DIR)" "$<"
 	@echo Finished building: $<
 endef	
+
+./$(OBJ_DIR)timems.o: ./$(SRC)timems.cpp
+	$(cppCompile)
 
 ./$(OBJ_DIR)Print.o: ./$(SRC)Print.cpp
 	$(cppCompile)
@@ -243,17 +267,8 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 	@echo Building target: $@
 	@echo Invoking: GNU Linker
-	"$(AVRGCC)" -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-subsystem,windows -Wl,-Map="$(OUTPUT_DIR)$(TARGET_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -Wl,--relax 
+	"$(AVRGCC)" -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -static -Wl,-subsystem,windows -Wl,-Map="$(OUTPUT_DIR)$(TARGET_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -Wl,--relax 
 	@echo Finished building target: $@
-#	"$(AVROBJCOPY)" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "$(OUTPUT_DIR)$(TARGET_NAME).elf" "$(OUTPUT_DIR)$(TARGET_NAME).hex"
-	
-#	"$(AVROBJCOPY)" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "$(OUTPUT_DIR)$(TARGET_NAME).elf" "$(OUTPUT_DIR)$(TARGET_NAME).eep" || exit 0
-	
-#	"$(AVROBJDUMP)" -h -S "$(OUTPUT_DIR)$(TARGET_NAME).elf" > "$(OUTPUT_DIR)$(TARGET_NAME).lss"
-	
-#	"$(AVROBJCOPY)" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "$(OUTPUT_DIR)$(TARGET_NAME).elf" "$(OUTPUT_DIR)$(TARGET_NAME).srec"
-	
-#	"$(AVRSIZE)" "$(OUTPUT_DIR)$(TARGET_NAME).elf"
 
 	
 
@@ -262,4 +277,4 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	-$(RM) "$(OUTPUT_DIR)$(TARGET_NAME).elf" "$(OUTPUT_DIR)$(TARGET_NAME).a" "$(OUTPUT_DIR)$(TARGET_NAME).hex" "$(OUTPUT_DIR)$(TARGET_NAME).lss" "$(OUTPUT_DIR)$(TARGET_NAME).eep" "$(OUTPUT_DIR)$(TARGET_NAME).map" "$(OUTPUT_DIR)$(TARGET_NAME).srec"
+	-$(RM) "$(OUTPUT_DIR)$(TARGET_NAME)exe" "$(OUTPUT_DIR)$(TARGET_NAME).a" 
