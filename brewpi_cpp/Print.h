@@ -44,5 +44,29 @@ class Stream : public Print
 {    
 };
 
+
+        class StdIO : public Stream {
+        public:
+            StdIO();
+            
+		void print(char c);
+		void print(const char* c);
+		void printNewLine();
+                void println();
+		int available();
+		void begin(unsigned long);
+
+		int read();
+                
+                size_t write(uint8_t w);
+		void flush();
+		operator bool() { return true; }
+
+        private:
+            std::istream& in;
+            FILE* out;
+        };
+
+
 #endif	/* PRINT_H */
 

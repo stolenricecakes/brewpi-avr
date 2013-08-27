@@ -22,12 +22,8 @@ OUTPUT_DIR ?= tmp/
 
 # default locations for tools based on the toolchain bin dir
 AVRGCC ?= $(TOOLCHAIN_BIN)g++$(EXE)
-AVROBJCOPY ?= $(TOOLCHAIN_BIN)objcopy$(EXE)
-AVROBJDUMP ?= $(TOOLCHAIN_BIN)objdump$(EXE)
-AVRSIZE ?= $(TOOLCHAIN_BIN)avr-size$(EXE)
 
 # default config if nothing else specified
-BOARD ?= leonardo
 BREWPI_STATIC_CONFIG ?= BREWPI_SHIELD_REV_C
 BREWPI_DEBUG ?= 0
 BUILD_NUMBER ?= 0
@@ -36,7 +32,8 @@ DEFINES = \
  -DBREWPI_STATIC_CONFIG=$(BREWPI_STATIC_CONFIG) \
  -DBREWPI_DEBUG=$(BREWPI_DEBUG) \
  -DBREWPI_SIMULATE="1" \
- -DBUILD_NUMBER=$(BUILD_NUMBER)
+ -DBUILD_NUMBER=$(BUILD_NUMBER) \
+ -DBREWPI_DEBUG=1
 
 USER_OBJS :=
 
@@ -57,7 +54,6 @@ C_DEPS_AS_ARGS :=
 EXECUTABLES := 
 OUTPUT_FILE_PATH :=
 OUTPUT_FILE_PATH_AS_ARGS :=
-AVR_APP_PATH :=$$$AVR_APP_PATH$$$
 QUOTE := "
 ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:=
@@ -151,21 +147,6 @@ $(OBJ_DIR)TempSensor.o \
 $(OBJ_DIR)Ticks.o \
 $(OBJ_DIR)timems.o
 
-OBJS_AS_ARGS2 +=  \
-$(OBJ_DIR)BrewpiStrings.o \
-$(OBJ_DIR)FilterCascaded.o \
-$(OBJ_DIR)FilterFixed.o \
-$(OBJ_DIR)Logger.o \
-$(OBJ_DIR)Main.o \
-$(OBJ_DIR)PiLink.o \
-$(OBJ_DIR)Print.o \
-$(OBJ_DIR)TempControl.o \
-$(OBJ_DIR)TemperatureFormats.o \
-$(OBJ_DIR)TempSensor.o \
-$(OBJ_DIR)Ticks.o \
-$(OBJ_DIR)timems.o 
-
-
 
 C_DEPS +=  \
 $(OBJ_DIR)Actuator.d \
@@ -234,10 +215,11 @@ LIB_DEP+=
 # Recipes
 #
 
+# removed -fpack-struct 
 define cppCompile
 	@echo Building file: $<
 	@echo Invoking: GNU GCC Compiler
-	"$(AVRGCC)" $(DEFINES) -I"." -funsigned-char -funsigned-bitfields -Os -fno-split-wide-types -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g3 -Wall  -c -fno-exceptions -ffreestanding -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$(OBJ_DIR)" "$<"
+	"$(AVRGCC)" $(DEFINES) -I"." -g -funsigned-char -fshort-enums -Wall  -c -MMD -MP -MF "$(@:%.o=%.d)"  -o "$@" "$(OBJ_DIR)" "$<"
 	@echo Finished building: $<
 endef	
 
@@ -264,14 +246,12 @@ endif
 # All Target
 all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 
+# removed -Wl,--gc-sections -Wl,-lm  -Wl,--verbose
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 	@echo Building target: $@
 	@echo Invoking: GNU Linker
-	"$(AVRGCC)" -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -static -Wl,-subsystem,windows -Wl,-Map="$(OUTPUT_DIR)$(TARGET_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -Wl,--relax 
+	"$(AVRGCC)" -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -static
 	@echo Finished building target: $@
-
-	
-
 
 # Other Targets
 clean:

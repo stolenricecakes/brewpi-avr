@@ -10,6 +10,10 @@
 #ifndef ARDUINO_H
 #define	ARDUINO_H
 
+#include <algorithm>
+#include <iostream>
+#include <string.h>
+
 #include "stdlib.h"
 #include "stdio.h"
 #include "stdint.h"
@@ -18,8 +22,7 @@
 #include "limits.h"
 #include "math.h"
 #include "print.h"
-#include <string.h>
-#include <algorithm>
+
 
 #define strcpy_P strcpy
 #define strlcpy_P strncpy
