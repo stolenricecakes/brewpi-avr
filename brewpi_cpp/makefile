@@ -1,3 +1,4 @@
+
 # makefile for regular gcc build
 
 # convert build parameters to defines
@@ -219,7 +220,7 @@ LIB_DEP+=
 define cppCompile
 	@echo Building file: $<
 	@echo Invoking: GNU GCC Compiler
-	"$(AVRGCC)" $(DEFINES) -I"." -g -funsigned-char -fshort-enums -Wall  -c -MMD -MP -MF "$(@:%.o=%.d)"  -o "$@" "$(OBJ_DIR)" "$<"
+	"$(AVRGCC)" $(DEFINES) -I"." -I"$(AVRSRC)" -g -funsigned-char -fshort-enums -Wall  -c -MMD -MP -MF "$(@:%.o=%.d)"  -o "$@" "$(OBJ_DIR)" "$<"
 	@echo Finished building: $<
 endef	
 

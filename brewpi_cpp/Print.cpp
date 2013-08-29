@@ -1,9 +1,25 @@
-/* 
- * File:   Print.cpp
- * Author: mat
+/*
+ * Copyright 2013 BrewPi/Elco Jacobs.
+ * Copyright 2013 Matthew McGowan.
+ *
+ * This file is part of BrewPi.
  * 
- * Created on 19 August 2013, 20:40
+ * BrewPi is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * BrewPi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+
+
 #include <stdio.h>
 #include <iostream>
 
@@ -74,7 +90,7 @@ int input_available()
       /* Something went wrong. Probably the parent program exited.
          Could call exit() here. Returning 1 will make the next call
          to the input function return EOF, where this should be
-         catched then. */
+         caught then. */
       return 1;
 
     return (nchars != 0);
