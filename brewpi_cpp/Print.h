@@ -24,7 +24,15 @@ public:
       if (str == NULL) return 0;
         return write((const uint8_t *)str, strlen(str));
     }
-    virtual size_t write(const uint8_t *buffer, size_t size);
+    virtual size_t write(const uint8_t *s, size_t size) {
+        size_t done = 0;
+        while (size--) {
+                done += write(*s++);
+        }
+        return done;
+    }
+    
+    virtual size_t write(uint8_t c)=0;
     
      size_t print(const char* str)
      {

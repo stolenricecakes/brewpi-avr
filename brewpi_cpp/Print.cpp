@@ -38,10 +38,6 @@ Print::Print(const Print& orig) {
 Print::~Print() {
 }
 
-size_t Print:: write(const uint8_t *buffer, size_t size)
-{
-    return size;
-}
 
 static int is_pipe = 0;
 static HANDLE input_handle = 0;

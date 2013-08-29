@@ -79,6 +79,7 @@ $(AVRSRC)FilterFixed.cpp \
 $(AVRSRC)Logger.cpp \
 $(SRC)Main.cpp \
 $(AVRSRC)Menu.cpp \
+$(AVRSRC)NullLcdDriver.cpp \
 $(AVRSRC)PiLink.cpp \
 $(SRC)Print.cpp \
 $(AVRSRC)RotaryEncoder.cpp \
@@ -105,12 +106,14 @@ $(OBJ_DIR)BrewpiStrings.o \
 $(OBJ_DIR)Buzzer.o \
 $(OBJ_DIR)DeviceManager.o \
 $(OBJ_DIR)Display.o \
+$(OBJ_DIR)DisplayLcd.o \
 $(OBJ_DIR)EepromManager.o \
 $(OBJ_DIR)FilterCascaded.o \
 $(OBJ_DIR)FilterFixed.o \
 $(OBJ_DIR)Logger.o \
 $(OBJ_DIR)Menu.o \
 $(OBJ_DIR)Main.o \
+$(OBJ_DIR)NullLcdDriver.o \
 $(OBJ_DIR)PiLink.o \
 $(OBJ_DIR)Print.o \
 $(OBJ_DIR)RotaryEncoder.o \
@@ -130,12 +133,14 @@ $(OBJ_DIR)BrewpiStrings.o \
 $(OBJ_DIR)Buzzer.o \
 $(OBJ_DIR)DeviceManager.o \
 $(OBJ_DIR)Display.o \
+$(OBJ_DIR)DisplayLcd.o \
 $(OBJ_DIR)EepromManager.o \
 $(OBJ_DIR)FilterCascaded.o \
 $(OBJ_DIR)FilterFixed.o \
 $(OBJ_DIR)Logger.o \
 $(OBJ_DIR)Main.o \
 $(OBJ_DIR)Menu.o \
+$(OBJ_DIR)NullLcdDriver.o \
 $(OBJ_DIR)PiLink.o \
 $(OBJ_DIR)Print.o \
 $(OBJ_DIR)RotaryEncoder.o \
@@ -220,7 +225,7 @@ LIB_DEP+=
 define cppCompile
 	@echo Building file: $<
 	@echo Invoking: GNU GCC Compiler
-	"$(AVRGCC)" $(DEFINES) -I"." -I"$(AVRSRC)" -g -funsigned-char -fshort-enums -Wall  -c -MMD -MP -MF "$(@:%.o=%.d)"  -o "$@" "$(OBJ_DIR)" "$<"
+	"$(AVRGCC)" $(DEFINES) -Os -I"." -I"$(AVRSRC)" -g -funsigned-char -fshort-enums -Wall  -c -MMD -MP -MF "$(@:%.o=%.d)"  -o "$@" "$(OBJ_DIR)" "$<"
 	@echo Finished building: $<
 endef	
 
