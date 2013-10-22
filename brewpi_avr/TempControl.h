@@ -34,11 +34,11 @@ const uint16_t MIN_COOL_OFF_TIME = 300;
 // Use a minimum off time for the heater as well, so it heats in cycles, not lots of short bursts
 const uint16_t MIN_HEAT_OFF_TIME = 300;
 // Minimum on time for the cooler.
-const uint16_t MIN_COOL_ON_TIME = 300;
+const uint16_t MIN_COOL_ON_TIME = 180;
 // Minimum on time for the heater.
-const uint16_t MIN_HEAT_ON_TIME = 300;
+const uint16_t MIN_HEAT_ON_TIME = 180;
 // Use a large minimum off time in fridge constant mode. No need for very fast cycling.
-const uint16_t MIN_COOL_OFF_TIME_FRIDGE_CONSTANT = 900;
+const uint16_t MIN_COOL_OFF_TIME_FRIDGE_CONSTANT = 600;
 // Set a minimum off time between switching between heating and cooling
 const uint16_t MIN_SWITCH_TIME = 600;
 // Time allowed for peak detection
@@ -72,6 +72,7 @@ struct ControlConstants{
 	char tempFormat;
 	fixed7_9 tempSettingMin;
 	fixed7_9 tempSettingMax;	
+	fixed7_9 pidMax;
 	fixed7_9 Kp;
 	fixed7_9 Ki;
 	fixed7_9 Kd;
@@ -210,8 +211,11 @@ class TempControl{
 	
 	TEMP_CONTROL_METHOD bool stateIsCooling(void);
 	TEMP_CONTROL_METHOD bool stateIsHeating(void);
+	TEMP_CONTROL_METHOD bool modeIsBeer(void){
+		return (cs.mode == MODE_BEER_CONSTANT || cs.mode == MODE_BEER_PROFILE);
+	}
 		
-	TEMP_CONTROL_METHOD void constantsChanged();
+	TEMP_CONTROL_METHOD void initFilters();
 	
 	TEMP_CONTROL_METHOD bool isDoorOpen() { return doorOpen; }
 	
