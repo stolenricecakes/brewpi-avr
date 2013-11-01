@@ -1,6 +1,6 @@
 /*
  * Copyright 2013 BrewPi/Elco Jacobs.
- * Copyright 2013 Matthew McGowan. 
+ * Copyright 2013 Matthew McGowan.
  *
  * This file is part of BrewPi.
  * 
@@ -18,36 +18,13 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
 
-#include "Brewpi.h"
+#include "stdint.h"
+#include "timems.h"
 
-template<class T> class Sensor
-{	
-	public:	
-	virtual T sense()=0;
-	
-	virtual ~Sensor() {}
-};
+static msec_t startupMillis = time_ms();
 
-template <class T>
-class ValueSensor : public Sensor<T>
+msec_t millisSinceStartup()
 {
-public:	
-	ValueSensor(T initial) : value(initial) {}
-
-	virtual T sense() {
-		return (T)0;
-	}
-	
-	void setValue(T _value) {
-		value = _value;
-	}
-	
-private:
-	T value;	
-};
-
-typedef Sensor<bool> SwitchSensor;
-
-
+    return time_ms()-startupMillis;
+}
