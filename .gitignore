@@ -18,3 +18,4 @@ Debug/
 *.atsuo
 *.cppproj
 *.atsln
+doxygen/
