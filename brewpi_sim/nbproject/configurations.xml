@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="89">
+<configurationDescriptor version="90">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>R:/dev/brewpi/brewpi-avr/brewpi_cpp/Main.cpp</itemPath>
+      <itemPath>../brewpi_cpp/Main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -41,7 +41,7 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="R:/dev/brewpi/brewpi-avr/brewpi_cpp/Main.cpp"
+      <item path="../brewpi_cpp/Main.cpp"
             ex="false"
             tool="1"
             flavor2="0">
@@ -70,12 +70,12 @@
         <linkerTool>
           <linkerLibItems>
             <linkerLibProjectItem>
-              <makeArtifact PL="R:/dev/brewpi/brewpi-avr/brewpi_lib"
+              <makeArtifact PL="../brewpi_lib"
                             CT="3"
                             CN="Release"
                             AC="false"
                             BL="true"
-                            WD="R:/dev/brewpi/brewpi-avr/brewpi_lib"
+                            WD="../brewpi_lib"
                             BC="${MAKE}  -f makefile CONF=Release"
                             CC="${MAKE}  -f makefile CONF=Release clean"
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libbrewpi_lib.a">
@@ -84,7 +84,7 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="R:/dev/brewpi/brewpi-avr/brewpi_cpp/Main.cpp"
+      <item path="../brewpi_cpp/Main.cpp"
             ex="false"
             tool="1"
             flavor2="0">
