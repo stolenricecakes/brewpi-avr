@@ -19,3 +19,11 @@ Debug/
 *.cppproj
 *.atsln
 doxygen/
+
+*.stackdump
+*/nbproject/Makefile-*.mk
+*/nbproject/Package-*.bash
+*/nbproject/private/*
+
+# eclipse project
+*/.metadata
