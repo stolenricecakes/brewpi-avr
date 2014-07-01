@@ -192,12 +192,14 @@ void TempControl::updatePID(void){
 		long_temperature newFridgeSetting = cs.beerSetting;
 		newFridgeSetting += cv.p;
 		newFridgeSetting += cv.i;
-		newFridgeSetting += cv.d;		
-
-		// constrain so fridge setting is max pidMax from beer setting
-		newFridgeSetting = constrain(constrainTemp16(newFridgeSetting), cs.beerSetting - cc.pidMax, cs.beerSetting + cc.pidMax);
-		// constrain within absolute limits
-		cs.fridgeSetting = constrain(constrainTemp16(newFridgeSetting), cc.tempSettingMin, cc.tempSettingMax);
+		newFridgeSetting += cv.d;
+		
+		// constrain to tempSettingMin or beerSetting - pidMAx, whichever is lower.
+		temperature lowerBound = (cs.beerSetting <= cc.tempSettingMin + cc.pidMax) ? cc.tempSettingMin : cs.beerSetting - cc.pidMax;
+		// constrain to tempSettingMax or beerSetting + pidMAx, whichever is higher.
+		temperature upperBound = (cs.beerSetting >= cc.tempSettingMax - cc.pidMax) ? cc.tempSettingMax : cs.beerSetting + cc.pidMax;
+		
+		cs.fridgeSetting = constrain(constrainTemp16(newFridgeSetting), lowerBound, upperBound);
 	}
 	else if(cs.mode == MODE_FRIDGE_CONSTANT){
 		// FridgeTemperature is set manually, use INVALID_TEMP to indicate beer temp is not active
@@ -627,7 +629,7 @@ const ControlConstants TempControl::ccDefaults PROGMEM =
 	/* tempSettingMax */ intToTemp(30),	// +30 deg Celsius
 	
 	// control defines, also in fixed point format (7 int bits, 9 frac bits), so multiplied by 2^9=512
-	/* Kp	*/ intToTempDiff(10),	// +5
+	/* Kp	*/ intToTempDiff(5),	// +5
 	/* Ki	*/ intToTempDiff(1)/4, // +0.25
 	/* Kd	*/ intToTempDiff(-3)/2,	// -1.5
 	/* iMaxError */ intToTempDiff(5)/10,  // 0.5 deg
