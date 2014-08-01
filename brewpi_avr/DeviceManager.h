@@ -247,16 +247,16 @@ public:
 	 */
 	int8_t enumOneWirePins(uint8_t offset)
 	{		
-#ifdef ARDUINO            
-#if BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A
+#ifdef ARDUINO  
+#if BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C || FORCE_ONEWIRE_USAGE
 		if (offset==0)
-			return beerSensorPin;
-		if (offset==1)
-			return fridgeSensorPin;
+		  return oneWirePin;
 #endif
-#if BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C
+#if BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A && !FORCE_ONEWIRE_USAGE
 		if (offset==0)
-			return oneWirePin;
+		   return beerSensorPin;
+		if (offset==1)
+		   return fridgeSensorPin;
 #endif
 #endif
 		return -1;								
@@ -317,14 +317,12 @@ private:
 
 #ifdef ARDUINO
 	
-#if BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A	
+#if BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A && !FORCE_ONEWIRE_USAGE
 	static OneWire beerSensorBus;
 	static OneWire fridgeSensorBus;	
-#endif	
-#if BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C
+#elif BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C || FORCE_ONEWIRE_USAGE
 	static OneWire primaryOneWireBus;	
-#endif
-        
+#endif      
 #endif
 	static bool firstDeviceOutput;
 };

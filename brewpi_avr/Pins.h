@@ -80,8 +80,14 @@
 #elif BREWPI_STATIC_CONFIG==BREWPI_SHIELD_DIY
 
 // pins
-#define beerSensorPin    10
-#define fridgeSensorPin  11
+#if FORCE_ONEWIRE_USAGE
+  #define oneWirePin A4
+#else
+  #define beerSensorPin    10
+  #define fridgeSensorPin  11
+#endif
+
+
 
 // Pay attention when changing the pins for the rotary encoder.
 // They should be connected to external interrupt INT0, INT1 and INT3

@@ -50,26 +50,25 @@ ValueActuator defaultActuator;
 DisconnectedTempSensor defaultTempSensor;
 
 #if !BREWPI_SIMULATE
-#if BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A
+#if BREWPI_STATIC_CONFIG >= BREWPI_SHIELD_REV_C || FORCE_ONEWIRE_USAGE
+OneWire DeviceManager::primaryOneWireBus(oneWirePin);
+#elif BREWPI_STATIC_CONFIG <= BREWPI_SHIELD_REV_A && !FORCE_ONEWIRE_USAGE
 OneWire DeviceManager::beerSensorBus(beerSensorPin);
 OneWire DeviceManager::fridgeSensorBus(fridgeSensorPin);
-#elif BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C
-OneWire DeviceManager::primaryOneWireBus(oneWirePin);
 #endif
 #endif
-
 
 OneWire* DeviceManager::oneWireBus(uint8_t pin) {
 #if !BREWPI_SIMULATE
-#if BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A
+#if BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C || FORCE_ONEWIRE_USAGE
+   if (pin==oneWirePin)
+      return &primaryOneWireBus;
+#elif BREWPI_STATIC_CONFIG<=BREWPI_SHIELD_REV_A
 	if (pin==beerSensorPin)
-		return &beerSensorBus;
+    	return &beerSensorBus;
 	if (pin==fridgeSensorPin)
-		return &fridgeSensorBus;
-#elif BREWPI_STATIC_CONFIG>=BREWPI_SHIELD_REV_C
-	if (pin==oneWirePin)
-		return &primaryOneWireBus;
-#endif		
+	    return &fridgeSensorBus;
+#endif
 #endif
 	return NULL;
 }
@@ -660,7 +659,7 @@ device_slot_t findHardwareDevice(DeviceConfig& find)
 {
 	DeviceConfig config;
 	for (device_slot_t slot= 0; deviceManager.allDevices(config, slot); slot++) {
-		if (find.deviceHardware==config.deviceHardware) {
+			if (find.deviceHardware==config.deviceHardware) {
 			bool match = true;
 			switch (find.deviceHardware) {
 #if BREWPI_DS2413

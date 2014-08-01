@@ -198,4 +198,7 @@
 #define DS2413_SUPPORT_SENSE 0
 #endif
 
+#ifndef FORCE_ONEWIRE_USAGE
+#define FORCE_ONEWIRE_USAGE 0
+#endif
 

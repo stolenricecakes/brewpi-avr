@@ -56,6 +56,7 @@ AVRSIZE ?= $(TOOLCHAIN_BIN)avr-size$(EXE)
 
 ARDUINO_VERSION ?= 105
 
+
 # default config if nothing else specified
 BOARD ?= leonardo
 BREWPI_STATIC_CONFIG ?= BREWPI_SHIELD_REV_C
@@ -327,6 +328,8 @@ endif
 all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
+	@echo using board: $BOARD
+	@echo using config: $BREWPI_STATIC_CONFIG
 	@echo Building target: $@
 	@echo Invoking: AVR8/GNU Linker
 	"$(AVRGCC)" -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="$(OUTPUT_DIR)$(TARGET_NAME).map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mmcu=$(MCU) -Wl,--relax 
